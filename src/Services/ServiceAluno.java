@@ -3,9 +3,9 @@ package Services;
 
 import ArvoreAVL.ArvoreAVL;
 import Exception.NaoEncontradoException;
-import ProjetoEscola.Model.Aluno;
-import ProjetoEscola.Model.Pessoa;
 import Interface.Service;
+import Model.Aluno;
+import Model.Pessoa;
 
 import java.util.List;
 public class ServiceAluno implements Service<Integer> {

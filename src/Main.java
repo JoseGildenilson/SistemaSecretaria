@@ -1,7 +1,7 @@
 
 
-import ProjetoEscola.Model.Aluno;
-import ProjetoEscola.Model.Pessoa;
+import Model.Aluno;
+import Model.Pessoa;
 import Services.ServiceAluno;
 
 public class Main {

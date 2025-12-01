@@ -1,0 +1,44 @@
+package Model;
+
+public class Turma implements Comparable<Turma> {
+    private int id;
+    private String ano;
+    private int semestre;
+    private int codigoDisciplina;
+
+    // ? construtor
+    public Turma(int id, String ano, int semestre, int codigoDisciplina) {
+        this.id = id;
+        this.ano = ano;
+        this.semestre = semestre;
+        this.codigoDisciplina = codigoDisciplina;
+    }
+
+    // ? getters
+    public int getId() {
+        return id;
+    }
+
+    public String getAno() {
+        return ano;
+    }
+
+    // ? setters
+    public void setAno(String ano) {
+        this.ano = ano;
+    }
+
+    public void setSemestre(int semestre) {
+        this.semestre = semestre;
+    }
+
+    @Override
+    public int compareTo(Turma o) {
+        return Integer.compare(this.id, o.id);
+    }
+
+    @Override
+    public String toString() {
+        return "Turma " + id + " (" + ano + "/" + semestre + ")";
+    }
+}
