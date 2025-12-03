@@ -36,13 +36,6 @@ public class Aluno extends Pessoa implements Comparable<Aluno>{
 
     @Override
     public String toString() {
-        return "--------------------------------------------------\n" +
-               "Matrícula: " + matricula + "\n" +
-               "Nome:      " + getNome() + "\n" +
-               "Curso:     " + curso + "\n" +
-               "CPF:       " + getCpf() + "\n" +
-               "Telefone:  " + getTelefone() + "\n" +
-               "Email:     " + getEmail() + "\n" +
-               "--------------------------------------------------";
+        return matricula + " - " + getNome();
     }
 }

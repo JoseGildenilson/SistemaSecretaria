@@ -34,9 +34,16 @@ public class ServiceCurso implements Service<Curso> {
 
     @Override
     public void listar() {
-        System.out.println("--- Lista de Cursos ---");
-        for (Curso c : arvore.emOrdem()) {
-            System.out.println(c);
+        if (arvore.emOrdem().isEmpty()) {
+            System.out.println("Nenhum curso cadastrado.");
+        } else {
+            for (Curso c : arvore.emOrdem()) {
+                System.out.println("--------------------------------------------------");
+                System.out.println("Código:   " + c.getCodigo());
+                System.out.println("Nome:     " + c.getNome());
+                System.out.println("Duração:  " + c.getDuracaoSemestres() + " semestres");
+                System.out.println("--------------------------------------------------");
+            }
         }
     }
 

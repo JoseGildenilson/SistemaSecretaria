@@ -41,14 +41,6 @@ public class Professor extends Pessoa implements Comparable<Professor> {
     
     @Override
     public String toString() {
-        return "--------------------------------------------------\n" +
-               "ID:          " + id + "\n" +
-               "Nome:        " + getNome() + "\n" +
-               "Disciplina:  " + disciplina + "\n" +
-               "Salário:     R$ " + String.format("%.2f", salario) + "\n" +
-               "CPF:         " + getCpf() + "\n" +
-               "Telefone:    " + getTelefone() + "\n" +
-               "Email:       " + getEmail() + "\n" +
-               "--------------------------------------------------";
+        return id + " - " + getNome();
     }
 }

@@ -78,10 +78,18 @@ public class Main {
                     case 2:
 
                         System.out.print("Digite a Matrícula: ");
-                        Aluno encontrado = serviceAluno.buscar(lerInteiro());
-                        System.out.println(encontrado);
+                        Aluno a = serviceAluno.buscar(lerInteiro());
+                        System.out.println("--------------------------------------------------");
+                        System.out.println("Matrícula: " + a.getMatricula());
+                        System.out.println("Nome:      " + a.getNome());
+                        System.out.println("Curso:     " + a.getCurso());
+                        System.out.println("CPF:       " + a.getCpf());
+                        System.out.println("Telefone:  " + a.getTelefone());
+                        System.out.println("Email:     " + a.getEmail());
+                        System.out.println("--------------------------------------------------");
                         
                         break;
+                        
                     case 3:
                         
                         System.out.print("Digite a Matrícula para atualizar: ");
@@ -167,7 +175,18 @@ public class Main {
                         serviceProfessor.inserir(new Professor(nome, cpf, tel, email, disc, sal, id));
                         break;
                     case 2:
-                        System.out.print("ID: "); System.out.println(serviceProfessor.buscar(lerInteiro()));
+                        
+                        System.out.print("ID: "); 
+                        Professor p = serviceProfessor.buscar(lerInteiro());
+                        System.out.println("--------------------------------------------------");
+                        System.out.println("ID:          " + p.getId());
+                        System.out.println("Nome:        " + p.getNome());
+                        System.out.println("Disciplina:  " + p.getDisciplina());
+                        System.out.println("Salário:     R$ " + String.format("%.2f", p.getSalario()));
+                        System.out.println("Telefone:    " + p.getTelefone());
+                        System.out.println("Email:       " + p.getEmail());
+                        System.out.println("--------------------------------------------------");
+
                         break;
                     case 3:
                         System.out.print("ID para atualizar: "); int idUp = lerInteiro();
@@ -239,7 +258,15 @@ public class Main {
                         serviceDisciplina.inserir(new Disciplina(nome, cod, ch));
                         break;
                     case 2:
-                        System.out.print("Código: "); System.out.println(serviceDisciplina.buscar(lerInteiro()));
+                        
+                        System.out.print("Código: "); 
+                        Disciplina d = serviceDisciplina.buscar(lerInteiro());
+                        System.out.println("--------------------------------------------------");
+                        System.out.println("Código:        " + d.getCodigo());
+                        System.out.println("Nome:          " + d.getNome());
+                        System.out.println("Carga Horária: " + d.getCargaHoraria() + "h");
+                        System.out.println("--------------------------------------------------");
+
                         break;
                     case 3:
                         
@@ -298,7 +325,15 @@ public class Main {
                         serviceCurso.inserir(new Curso(nome, cod, dur));
                         break;
                     case 2:
-                        System.out.print("Código: "); System.out.println(serviceCurso.buscar(lerInteiro()));
+                        
+                        System.out.print("Código: "); 
+                        Curso c = serviceCurso.buscar(lerInteiro());
+                        System.out.println("--------------------------------------------------");
+                        System.out.println("Código:   " + c.getCodigo());
+                        System.out.println("Nome:     " + c.getNome());
+                        System.out.println("Duração:  " + c.getDuracaoSemestres() + " semestres");
+                        System.out.println("--------------------------------------------------");
+
                         break;
                     case 3:
                         
@@ -358,7 +393,14 @@ public class Main {
                         serviceTurma.inserir(new Turma(id, ano, sem, codDisc));
                         break;
                     case 2:
-                        System.out.print("ID: "); System.out.println(serviceTurma.buscar(lerInteiro()));
+                        
+                        System.out.print("ID: "); 
+                        Turma t = serviceTurma.buscar(lerInteiro());
+                        System.out.println("--------------------------------------------------");
+                        System.out.println("ID da Turma:     " + t.getId());
+                        System.out.println("Ano/Semestre:    " + t.getAno() + "/" + t.getSemestre());
+                        System.out.println("--------------------------------------------------");
+                        
                         break;
                     case 3:
                         

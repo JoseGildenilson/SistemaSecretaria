@@ -34,8 +34,16 @@ public class ServiceDisciplina implements Service<Disciplina>{
 
     @Override
     public void listar() {
-        for(Disciplina d: arvore.emOrdem()) {
-            System.out.println(d);
+        if (arvore.emOrdem().isEmpty()) {
+            System.out.println("Nenhuma disciplina cadastrada.");
+        } else {
+            for (Disciplina d : arvore.emOrdem()) {
+                System.out.println("--------------------------------------------------");
+                System.out.println("Código:        " + d.getCodigo());
+                System.out.println("Nome:          " + d.getNome());
+                System.out.println("Carga Horária: " + d.getCargaHoraria() + "h");
+                System.out.println("--------------------------------------------------");
+            }
         }
     }
 

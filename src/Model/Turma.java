@@ -40,9 +40,6 @@ public class Turma implements Comparable<Turma> {
 
     @Override
     public String toString() {
-        return "--------------------------------------------------\n" +
-               "ID da Turma:     " + id + "\n" +
-               "Ano/Semestre:    " + ano + "/" + semestre + "\n" +
-               "--------------------------------------------------";
+        return "Turma " + id + " (" + ano + "/" + semestre + ")";
     }
 }

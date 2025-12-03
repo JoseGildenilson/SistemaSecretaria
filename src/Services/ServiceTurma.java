@@ -34,9 +34,15 @@ public class ServiceTurma implements Service<Turma> {
 
     @Override
     public void listar() {
-        System.out.println("--- Lista de Turmas ---");
-        for (Turma t : arvore.emOrdem()) {
-            System.out.println(t);
+        if (arvore.emOrdem().isEmpty()) {
+            System.out.println("Nenhuma turma cadastrada.");
+        } else {
+            for (Turma t : arvore.emOrdem()) {
+                System.out.println("--------------------------------------------------");
+                System.out.println("ID da Turma:     " + t.getId());
+                System.out.println("Ano/Semestre:    " + t.getAno() + "/" + t.getSemestre());
+                System.out.println("--------------------------------------------------");
+            }
         }
     }
 

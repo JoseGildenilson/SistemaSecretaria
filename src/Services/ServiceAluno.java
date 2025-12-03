@@ -44,7 +44,14 @@ public class ServiceAluno implements Service<Aluno> {
             System.out.println("Nenhum aluno cadastrado.");
         } else {
             for (Aluno a : arvore.emOrdem()) {
-                System.out.println(a); // Chama automaticamente o toString() bonito que criámos
+                System.out.println("--------------------------------------------------");
+                System.out.println("Matrícula: " + a.getMatricula());
+                System.out.println("Nome:      " + a.getNome());
+                System.out.println("Curso:     " + a.getCurso());
+                System.out.println("CPF:       " + a.getCpf());
+                System.out.println("Telefone:  " + a.getTelefone());
+                System.out.println("Email:     " + a.getEmail());
+                System.out.println("--------------------------------------------------");
             }
         }
     }

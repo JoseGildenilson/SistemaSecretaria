@@ -38,9 +38,19 @@ public class ServiceProfessor implements Service<Professor> {
 
     @Override
     public void listar() {
-        System.out.println("--- Lista de Professores ---");
-        for (Professor p : arvore.emOrdem()) {
-            System.out.println(p);
+        if (arvore.emOrdem().isEmpty()) {
+            System.out.println("Nenhum professor cadastrado.");
+        } else {
+            for (Professor p : arvore.emOrdem()) {
+                System.out.println("--------------------------------------------------");
+                System.out.println("ID:          " + p.getId());
+                System.out.println("Nome:        " + p.getNome());
+                System.out.println("Disciplina:  " + p.getDisciplina());
+                System.out.println("Salário:     R$ " + String.format("%.2f", p.getSalario()));
+                System.out.println("Telefone:    " + p.getTelefone());
+                System.out.println("Email:       " + p.getEmail());
+                System.out.println("--------------------------------------------------");
+            }
         }
     }
 
