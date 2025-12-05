@@ -61,4 +61,14 @@ public class ServiceAluno implements Service<Aluno> {
         arvore.exibirArvore();
     }
 
+    @Override
+    public boolean existe(int matricula) {
+        try {
+            buscar(matricula);
+            return true;
+        } catch (NaoEncontradoException e){
+            return false;
+        }
+    }
+
 }

@@ -51,4 +51,14 @@ public class ServiceDisciplina implements Service<Disciplina>{
     public void exibirArvore() {
         arvore.exibirArvore();
     }
+
+    @Override
+    public boolean existe(int codigo) {
+        try {
+            buscar(codigo);
+            return true;
+        } catch (NaoEncontradoException e){
+            return false;
+        }
+    }
 }

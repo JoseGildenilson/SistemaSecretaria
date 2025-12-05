@@ -2,6 +2,7 @@ import java.util.Scanner;
 import Services.*;
 import Model.*;
 import Exception.NaoEncontradoException;
+import Utils.InputHandler;
 
 public class Main {
     private static ServiceAluno serviceAluno = new ServiceAluno();
@@ -10,7 +11,6 @@ public class Main {
     private static ServiceCurso serviceCurso = new ServiceCurso();
     private static ServiceTurma serviceTurma = new ServiceTurma();
 
-    private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         int opcao = -1;
@@ -24,15 +24,8 @@ public class Main {
             System.out.println("4. Gerir Cursos");
             System.out.println("5. Gerir Turmas");
             System.out.println("0. Sair");
-            System.out.print("Escolha uma opção: ");
             
-            try {
-                String entrada = scanner.nextLine();
-                opcao = Integer.parseInt(entrada);
-            } catch (NumberFormatException e) {
-                System.out.println("Por favor, digite um número válido.");
-                continue;
-            }
+            opcao = InputHandler.lerInt("Escolha uma opção: ");
 
             switch (opcao) {
                 case 1: menuAluno(); break;
@@ -62,23 +55,32 @@ public class Main {
             System.out.println("0. Voltar");
             System.out.print("Opção: ");
             
-            opcao = lerInteiro();
+            opcao = InputHandler.lerInt("Opção: ");
             try {
                 switch (opcao) {
                     case 1:
-                        System.out.print("Matrícula (número): "); int mat = lerInteiro();
-                        System.out.print("Nome: "); String nome = scanner.nextLine();
-                        System.out.print("CPF: "); String cpf = scanner.nextLine();
-                        System.out.print("Telefone: "); String tel = scanner.nextLine();
-                        System.out.print("Email: "); String email = scanner.nextLine();
-                        System.out.print("Curso: "); String curso = scanner.nextLine();
-                        serviceAluno.inserir(new Aluno(nome, cpf, tel, email, curso, mat));
-                        System.out.println("Sucesso!");
+                        
+                        System.out.println("\n-- Novo Aluno --");
+
+                        int matricula = InputHandler.lerInt("Matrícula (número): ");
+
+                        if(serviceAluno.existe(matricula)) {
+                            System.out.println("ERRO: Já existe um aluno cadastrado com a matrícula " + matricula + ".");
+                        } else {
+                            String nome = InputHandler.lerString("Nome: ");
+                            String cpf = InputHandler.lerString("CPF: ");
+                            String tel = InputHandler.lerString("Telefone: ");
+                            String email = InputHandler.lerString("Email: ");
+                            String curso = InputHandler.lerString("Curso: ");
+                            
+                            serviceAluno.inserir(new Aluno(nome, cpf, tel, email, curso, matricula));
+                            System.out.println("Aluno cadastrado com sucesso!");
+                        }
                         break;
                     case 2:
 
-                        System.out.print("Digite a Matrícula: ");
-                        Aluno a = serviceAluno.buscar(lerInteiro());
+                        int matBusca = InputHandler.lerInt("Digite a Matrícula: ");
+                        Aluno a = serviceAluno.buscar(matBusca);
                         System.out.println("--------------------------------------------------");
                         System.out.println("Matrícula: " + a.getMatricula());
                         System.out.println("Nome:      " + a.getNome());
@@ -92,26 +94,21 @@ public class Main {
                         
                     case 3:
                         
-                        System.out.print("Digite a Matrícula para atualizar: ");
-                        int matUp = lerInteiro();
+                        int matUp = InputHandler.lerInt("Digite a Matrícula para atualizar: ");
                         Aluno alUp = serviceAluno.buscar(matUp);
                         
                         System.out.println("--- Atualizando (Pressione ENTER para manter o valor atual) ---");
                         
-                        System.out.print("Nome (" + alUp.getNome() + "): ");
-                        String nNome = scanner.nextLine();
+                        String nNome = InputHandler.lerStringOpcional("Nome (" + alUp.getNome() + "): ");
                         if (nNome.isEmpty()) nNome = alUp.getNome();
 
-                        System.out.print("Telefone (" + alUp.getTelefone() + "): ");
-                        String nTel = scanner.nextLine();
+                        String nTel = InputHandler.lerStringOpcional("Telefone (" + alUp.getTelefone() + "): ");
                         if (nTel.isEmpty()) nTel = alUp.getTelefone();
 
-                        System.out.print("Email (" + alUp.getEmail() + "): ");
-                        String nEmail = scanner.nextLine();
+                        String nEmail = InputHandler.lerStringOpcional("Email (" + alUp.getEmail() + "): ");
                         if (nEmail.isEmpty()) nEmail = alUp.getEmail();
 
-                        System.out.print("Curso (" + alUp.getCurso() + "): ");
-                        String nCurso = scanner.nextLine();
+                        String nCurso = InputHandler.lerStringOpcional("Curso (" + alUp.getCurso() + "): ");
                         if (nCurso.isEmpty()) nCurso = alUp.getCurso();
                         
                         serviceAluno.atualizar(matUp, new Aluno(nNome, alUp.getCpf(), nTel, nEmail, nCurso, matUp));
@@ -120,8 +117,8 @@ public class Main {
                         break;
                     case 4:
                         
-                        System.out.print("Digite a Matrícula para remover: ");
-                        int matriculaRemover = lerInteiro();
+
+                        int matriculaRemover = InputHandler.lerInt("Digite a Matrícula para remover: ");
                         Aluno alunoRemover = serviceAluno.buscar(matriculaRemover);
                         serviceAluno.remover(matriculaRemover);
                         System.out.println("Aluno(a) '" + alunoRemover.getNome() + "' removido(a) com sucesso!");
@@ -160,24 +157,31 @@ public class Main {
             System.out.println("6. Árvore");
             System.out.println("0. Voltar");
             System.out.print("Opção: ");
-            opcao = lerInteiro();
+            opcao = InputHandler.lerInt("Opção: ");
             
             try {
                 switch (opcao) {
                     case 1:
-                        System.out.print("ID: "); int id = lerInteiro();
-                        System.out.print("Nome: "); String nome = scanner.nextLine();
-                        System.out.print("CPF: "); String cpf = scanner.nextLine();
-                        System.out.print("Tel: "); String tel = scanner.nextLine();
-                        System.out.print("Email: "); String email = scanner.nextLine();
-                        System.out.print("Disciplina: "); String disc = scanner.nextLine();
-                        System.out.print("Salário: "); double sal = Double.parseDouble(scanner.nextLine());
-                        serviceProfessor.inserir(new Professor(nome, cpf, tel, email, disc, sal, id));
+                        
+                        System.out.println("\n-- Novo Professor --");
+                        int id = InputHandler.lerInt("ID: ");
+                        
+                        if (serviceProfessor.existe(id)) {
+                            System.out.println("ERRO: Já existe um professor com o ID " + id);
+                        } else {
+                            String nome = InputHandler.lerString("Nome: ");
+                            String cpf = InputHandler.lerString("CPF: ");
+                            String tel = InputHandler.lerString("Tel: ");
+                            String email = InputHandler.lerString("Email: ");
+                            String disc = InputHandler.lerString("Disciplina: ");
+                            double sal = InputHandler.lerDouble("Salário: ");
+                            serviceProfessor.inserir(new Professor(nome, cpf, tel, email, disc, sal, id));
+                            System.out.println("Professor cadastrado!");
+                        }
                         break;
                     case 2:
                         
-                        System.out.print("ID: "); 
-                        Professor p = serviceProfessor.buscar(lerInteiro());
+                        Professor p = serviceProfessor.buscar(InputHandler.lerInt("ID para buscar: "));
                         System.out.println("--------------------------------------------------");
                         System.out.println("ID:          " + p.getId());
                         System.out.println("Nome:        " + p.getNome());
@@ -189,42 +193,36 @@ public class Main {
 
                         break;
                     case 3:
-                        System.out.print("ID para atualizar: "); int idUp = lerInteiro();
-                        Professor pUp = serviceProfessor.buscar(idUp);
                         
-                        System.out.println("--- Atualizando (Pressione ENTER para manter o valor atual) ---");
+                        int idUp = InputHandler.lerInt("ID para atualizar: ");
+                        Professor pUp = serviceProfessor.buscar(idUp);
+                        System.out.println("--- Enter para manter o valor atual ---");
 
-                        System.out.print("Nome (" + pUp.getNome() + "): ");
-                        String nNome = scanner.nextLine();
+                        String nNome = InputHandler.lerStringOpcional("Nome (" + pUp.getNome() + "): ");
                         if (nNome.isEmpty()) nNome = pUp.getNome();
 
-                        System.out.print("Tel (" + pUp.getTelefone() + "): ");
-                        String nTel = scanner.nextLine();
+                        String nTel = InputHandler.lerStringOpcional("Tel (" + pUp.getTelefone() + "): ");
                         if (nTel.isEmpty()) nTel = pUp.getTelefone();
 
-                        System.out.print("Email (" + pUp.getEmail() + "): ");
-                        String nEmail = scanner.nextLine();
+                        String nEmail = InputHandler.lerStringOpcional("Email (" + pUp.getEmail() + "): ");
                         if (nEmail.isEmpty()) nEmail = pUp.getEmail();
-
-                        System.out.print("Disciplina (" + pUp.getDisciplina() + "): ");
-                        String nDisc = scanner.nextLine();
+                        
+                        String nDisc = InputHandler.lerStringOpcional("Disciplina (" + pUp.getDisciplina() + "): ");
                         if (nDisc.isEmpty()) nDisc = pUp.getDisciplina();
 
-                        System.out.print("Salário (" + pUp.getSalario() + "): ");
-                        String inputSal = scanner.nextLine();
-                        double nSal = inputSal.isEmpty() ? pUp.getSalario() : Double.parseDouble(inputSal);
+                        double nSal = InputHandler.lerDoubleOpcional("Salário (" + pUp.getSalario() + "): ", pUp.getSalario());
 
                         serviceProfessor.atualizar(idUp, new Professor(nNome, pUp.getCpf(), nTel, nEmail, nDisc, nSal, idUp));
                         System.out.println("Professor atualizado!");
+                        
                         break;
                     case 4:
-                        
-                        System.out.print("Digite o ID para remover: ");
-                        int idRemover = lerInteiro();
-                        Professor professorRemover = serviceProfessor.buscar(idRemover);
-                        serviceProfessor.remover(idRemover);
-                        System.out.println("Professor(a) '" + professorRemover.getNome() + "' removido(a) com sucesso!");
-                        
+
+                        int idRem = InputHandler.lerInt("ID para remover: ");
+                        Professor buffer = serviceProfessor.buscar(idRem);
+                        serviceProfessor.remover(idRem);
+                        System.out.println("Professor(a) '" + buffer.getNome() + "' removido(a) com sucesso!");
+
                         break;
                     case 5: serviceProfessor.listar(); break;
                     case 6: serviceProfessor.exibirArvore(); break;
@@ -248,19 +246,23 @@ public class Main {
             System.out.println("6. Árvore");
             System.out.println("0. Voltar");
             System.out.print("Opção: ");
-            opcao = lerInteiro();
+            opcao = InputHandler.lerInt("Opção: ");
             try {
                 switch (opcao) {
                     case 1:
-                        System.out.print("Código: "); int cod = lerInteiro();
-                        System.out.print("Nome: "); String nome = scanner.nextLine();
-                        System.out.print("Carga Horária: "); int ch = lerInteiro();
-                        serviceDisciplina.inserir(new Disciplina(nome, cod, ch));
+                        int cod = InputHandler.lerInt("Código: ");
+                        if (serviceDisciplina.existe(cod)) {
+                            System.out.println("ERRO: Código já existente.");
+                        } else {
+                            String nome = InputHandler.lerString("Nome: ");
+                            int ch = InputHandler.lerInt("Carga Horária: ");
+                            serviceDisciplina.inserir(new Disciplina(nome, cod, ch));
+                            System.out.println("Disciplina cadastrada!");
+                        }
                         break;
                     case 2:
                         
-                        System.out.print("Código: "); 
-                        Disciplina d = serviceDisciplina.buscar(lerInteiro());
+                        Disciplina d = serviceDisciplina.buscar(InputHandler.lerInt("Código: "));
                         System.out.println("--------------------------------------------------");
                         System.out.println("Código:        " + d.getCodigo());
                         System.out.println("Nome:          " + d.getNome());
@@ -270,28 +272,23 @@ public class Main {
                         break;
                     case 3:
                         
-                    System.out.print("Código: "); int codUp = lerInteiro();
+                        int codUp = InputHandler.lerInt("Código para atualizar: ");
                         Disciplina dUp = serviceDisciplina.buscar(codUp);
-
-                        System.out.print("Nome (" + dUp.getNome() + "): ");
-                        String nNome = scanner.nextLine();
-                        if (nNome.isEmpty()) nNome = dUp.getNome();
-
-                        System.out.print("Carga Horária (" + dUp.getCargaHoraria() + "): ");
-                        String inputCH = scanner.nextLine();
-                        int nCH = inputCH.isEmpty() ? dUp.getCargaHoraria() : Integer.parseInt(inputCH);
-
-                        serviceDisciplina.atualizar(codUp, new Disciplina(nNome, codUp, nCH));
-                        System.out.println("Disciplina atualizada!");
                         
+                        String nNome = InputHandler.lerStringOpcional("Nome (" + dUp.getNome() + "): ");
+                        if (nNome.isEmpty()) nNome = dUp.getNome();
+                        
+                        int nCH = InputHandler.lerIntOpcional("Carga Horária (" + dUp.getCargaHoraria() + "): ", dUp.getCargaHoraria());
+                        
+                        serviceDisciplina.atualizar(codUp, new Disciplina(nNome, codUp, nCH));
+                        System.out.println("Atualizado!");
                         break;
                     case 4:
                         
-                        System.out.print("Digite o Código para remover: ");
-                        int codigoRemover = lerInteiro();
-                        Disciplina disciplinaRemover = serviceDisciplina.buscar(codigoRemover);
-                        serviceDisciplina.remover(codigoRemover);
-                        System.out.println("Disciplina '" + disciplinaRemover.getNome() + "' removida com sucesso!");
+                        int codRem = InputHandler.lerInt("Código para remover: ");
+                        Disciplina buffer = serviceDisciplina.buscar(codRem);
+                        serviceDisciplina.remover(codRem);
+                        System.out.println("Disciplina '" + buffer.getNome() + "' removida com sucesso!");
                         
                         break;
                     case 5: serviceDisciplina.listar(); break;
@@ -314,20 +311,23 @@ public class Main {
             System.out.println("5. Listar");
             System.out.println("6. Árvore");
             System.out.println("0. Voltar");
-            System.out.print("Opção: ");
-            opcao = lerInteiro();
+            opcao = InputHandler.lerInt("Opção: ");
             try {
                 switch (opcao) {
                     case 1:
-                        System.out.print("Código: "); int cod = lerInteiro();
-                        System.out.print("Nome: "); String nome = scanner.nextLine();
-                        System.out.print("Duração (semestres): "); int dur = lerInteiro();
-                        serviceCurso.inserir(new Curso(nome, cod, dur));
+                        int cod = InputHandler.lerInt("Código: ");
+                        if (serviceCurso.existe(cod)) {
+                            System.out.println("ERRO: Código já existente.");
+                        } else {
+                            String nome = InputHandler.lerString("Nome: ");
+                            int dur = InputHandler.lerInt("Duração (semestres): ");
+                            serviceCurso.inserir(new Curso(nome, cod, dur));
+                            System.out.println("Curso cadastrado!");
+                        }
                         break;
                     case 2:
                         
-                        System.out.print("Código: "); 
-                        Curso c = serviceCurso.buscar(lerInteiro());
+                        Curso c = serviceCurso.buscar(InputHandler.lerInt("Código: "));
                         System.out.println("--------------------------------------------------");
                         System.out.println("Código:   " + c.getCodigo());
                         System.out.println("Nome:     " + c.getNome());
@@ -337,28 +337,23 @@ public class Main {
                         break;
                     case 3:
                         
-                        System.out.print("Código: "); int codUp = lerInteiro();
+                        int codUp = InputHandler.lerInt("Código para atualizar: ");
                         Curso cUp = serviceCurso.buscar(codUp);
-
-                        System.out.print("Nome (" + cUp.getNome() + "): ");
-                        String nNome = scanner.nextLine();
-                        if (nNome.isEmpty()) nNome = cUp.getNome();
-
-                        System.out.print("Duração (" + cUp.getDuracaoSemestres() + "): ");
-                        String inputDur = scanner.nextLine();
-                        int nDur = inputDur.isEmpty() ? cUp.getDuracaoSemestres() : Integer.parseInt(inputDur);
-
-                        serviceCurso.atualizar(codUp, new Curso(nNome, codUp, nDur));
-                        System.out.println("Curso atualizado!");
                         
+                        String nNome = InputHandler.lerStringOpcional("Nome (" + cUp.getNome() + "): ");
+                        if (nNome.isEmpty()) nNome = cUp.getNome();
+                        
+                        int nDur = InputHandler.lerIntOpcional("Duração (" + cUp.getDuracaoSemestres() + "): ", cUp.getDuracaoSemestres());
+                        
+                        serviceCurso.atualizar(codUp, new Curso(nNome, codUp, nDur));
+                        System.out.println("Atualizado!");
                         break;
                     case 4:
                         
-                        System.out.print("Digite o Código para remover: ");
-                        int codigoRemover = lerInteiro();
-                        Curso cursoRemoveCurso = serviceCurso.buscar(codigoRemover);
-                        serviceCurso.remover(codigoRemover);
-                        System.out.println("Curso '" + cursoRemoveCurso.getNome() + "' removido com sucesso!");
+                        int codRem = InputHandler.lerInt("Código para remover: ");
+                        Curso buffer = serviceCurso.buscar(codRem);
+                        serviceCurso.remover(codRem);
+                        System.out.println("Curso '" + buffer.getNome() + "' removido com sucesso!");
                         
                         break;
                     case 5: serviceCurso.listar(); break;
@@ -381,21 +376,23 @@ public class Main {
             System.out.println("5. Listar");
             System.out.println("6. Árvore");
             System.out.println("0. Voltar");
-            System.out.print("Opção: ");
-            opcao = lerInteiro();
+            opcao = InputHandler.lerInt("Opção: ");
             try {
                 switch (opcao) {
                     case 1:
-                        System.out.print("ID da Turma: "); int id = lerInteiro();
-                        System.out.print("Ano (ex: 2024): "); String ano = scanner.nextLine();
-                        System.out.print("Semestre (1 ou 2): "); int sem = lerInteiro();
-                        System.out.print("Cód. Disciplina: "); int codDisc = lerInteiro();
-                        serviceTurma.inserir(new Turma(id, ano, sem, codDisc));
-                        break;
+                       int id = InputHandler.lerInt("ID da Turma: ");
+                    if (serviceTurma.existe(id)) {
+                        System.out.println("ERRO: Turma já existente.");
+                    } else {
+                        String ano = InputHandler.lerString("Ano (ex: 2024): ");
+                        int sem = InputHandler.lerInt("Semestre (1 ou 2): ");
+                        serviceTurma.inserir(new Turma(id, ano, sem));
+                        System.out.println("Turma cadastrada!");
+                    }
+                    break;
                     case 2:
                         
-                        System.out.print("ID: "); 
-                        Turma t = serviceTurma.buscar(lerInteiro());
+                        Turma t = serviceTurma.buscar(InputHandler.lerInt("ID: "));
                         System.out.println("--------------------------------------------------");
                         System.out.println("ID da Turma:     " + t.getId());
                         System.out.println("Ano/Semestre:    " + t.getAno() + "/" + t.getSemestre());
@@ -404,28 +401,23 @@ public class Main {
                         break;
                     case 3:
                         
-                        System.out.print("ID: "); int idUp = lerInteiro();
+                        int idUp = InputHandler.lerInt("ID para atualizar: ");
                         Turma tUp = serviceTurma.buscar(idUp);
-
-                        System.out.print("Ano (" + tUp.getAno() + "): ");
-                        String nAno = scanner.nextLine();
-                        if (nAno.isEmpty()) nAno = tUp.getAno();
-
-                        System.out.print("Semestre (" + tUp.getSemestre() + "): ");
-                        String inputSem = scanner.nextLine();
-                        int nSem = inputSem.isEmpty() ? tUp.getSemestre() : Integer.parseInt(inputSem);
-
-                        serviceTurma.atualizar(idUp, new Turma(idUp, nAno, nSem, 0));
-                        System.out.println("Turma atualizada!");
                         
+                        String nAno = InputHandler.lerStringOpcional("Ano (" + tUp.getAno() + "): ");
+                        if (nAno.isEmpty()) nAno = tUp.getAno();
+                        
+                        int nSem = InputHandler.lerIntOpcional("Semestre (" + tUp.getSemestre() + "): ", tUp.getSemestre());
+
+                        serviceTurma.atualizar(idUp, new Turma(idUp, nAno, nSem)); 
+                        System.out.println("Atualizado!");
                         break;
                     case 4:
                         
-                        System.out.print("Digite o ID da Turma para remover: ");
-                        int idTurmaRemover = lerInteiro();
-                        Turma turmaRemoveTurma = serviceTurma.buscar(idTurmaRemover);
-                        serviceTurma.remover(idTurmaRemover);
-                        System.out.println("Turma " + turmaRemoveTurma.getId() + " (" + turmaRemoveTurma.getAno() + ") removida com sucesso!");
+                        int idRem = InputHandler.lerInt("ID para remover: ");
+                        Turma buffer = serviceTurma.buscar(idRem);
+                        serviceTurma.remover(idRem);
+                        System.out.println("Turma " + buffer.getId() + " (" + buffer.getAno() + ") removida com sucesso!");
                         
                         break;
                     case 5: serviceTurma.listar(); break;
@@ -436,15 +428,4 @@ public class Main {
         }
     }
 
-    // ? Métodos auxiliares 
-
-    // . Método para ler e garantindo o não problema com buffer 
-    private static int lerInteiro() {
-        try {
-            String input = scanner.nextLine();
-            return Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-            return -1;
-        }
-    }
 }

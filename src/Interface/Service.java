@@ -9,4 +9,5 @@ public interface Service<T> {
     void atualizar(int id, T novosDados) throws NaoEncontradoException;
     void listar();
     void exibirArvore();
+    boolean existe(int id);
 }

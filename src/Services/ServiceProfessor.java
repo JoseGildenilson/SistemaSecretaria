@@ -58,4 +58,15 @@ public class ServiceProfessor implements Service<Professor> {
     public void exibirArvore() {
         arvore.exibirArvore();
     }
+
+    @Override
+    public boolean existe(int id) {
+        try {
+            buscar(id);
+            return true;
+        } catch (NaoEncontradoException e){
+            return false;
+        }
+    }
+
 }

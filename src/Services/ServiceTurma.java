@@ -15,12 +15,12 @@ public class ServiceTurma implements Service<Turma> {
 
     @Override
     public void remover(int id) {
-        arvore.remover(new Turma(id, "", 0, 0));
+        arvore.remover(new Turma(id, "", 0));
     }
 
     @Override
     public Turma buscar(int id) throws NaoEncontradoException {
-        Turma t = arvore.buscar(new Turma(id, "", 0, 0));
+        Turma t = arvore.buscar(new Turma(id, "", 0));
         if (t == null) throw new NaoEncontradoException("Turma não encontrada.");
         return t;
     }
@@ -49,5 +49,15 @@ public class ServiceTurma implements Service<Turma> {
     @Override
     public void exibirArvore() {
         arvore.exibirArvore();
+    }
+
+    @Override
+    public boolean existe(int id) {
+        try {
+            buscar(id);
+            return true;
+        } catch (NaoEncontradoException e){
+            return false;
+        }
     }
 }

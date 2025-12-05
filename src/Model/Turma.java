@@ -1,12 +1,13 @@
 package Model;
 
+
 public class Turma implements Comparable<Turma> {
     private int id;
     private String ano;
     private int semestre;
 
     // ? construtor
-    public Turma(int id, String ano, int semestre, int codigoDisciplina) {
+    public Turma(int id, String ano, int semestre) {
         this.id = id;
         this.ano = ano;
         this.semestre = semestre;
@@ -42,4 +43,5 @@ public class Turma implements Comparable<Turma> {
     public String toString() {
         return "Turma " + id + " (" + ano + "/" + semestre + ")";
     }
+
 }
