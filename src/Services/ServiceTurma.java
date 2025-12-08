@@ -4,6 +4,9 @@ import ArvoreAVL.ArvoreAVL;
 import Exception.NaoEncontradoException;
 import Interface.Service;
 import Model.Turma;
+import Model.Curso;
+import Model.Disciplina;
+import Model.Professor;
 
 public class ServiceTurma implements Service<Turma> {
     private ArvoreAVL<Turma> arvore = new ArvoreAVL<>();
@@ -42,6 +45,8 @@ public class ServiceTurma implements Service<Turma> {
                 System.out.println("ID da Turma:     " + t.getId());
                 System.out.println("Ano/Semestre:    " + t.getAno() + "/" + t.getSemestre());
                 System.out.println("Curso:           " + (t.getCurso() != null ? t.getCurso().getNome() : "Sem curso"));
+                System.out.println("Disciplina:      " + (t.getDisciplina() != null ? t.getDisciplina().getNome() : "Sem disciplina"));
+                System.out.println("Professor:       " + (t.getProfessor() != null ? t.getProfessor().getNome() : "Sem professor"));
                 System.out.println("--------------------------------------------------");
             }
         }
@@ -60,5 +65,25 @@ public class ServiceTurma implements Service<Turma> {
         } catch (NaoEncontradoException e){
             return false;
         }
+    }
+
+    public void vincularCurso(int turmaId, Curso curso) throws NaoEncontradoException {
+        Turma turma = buscar(turmaId);
+        turma.setCurso(curso);
+    }
+
+    public void vincularDisciplina(int turmaId, Disciplina disciplina) throws NaoEncontradoException {
+        Turma turma = buscar(turmaId);
+        turma.setDisciplina(disciplina);
+    }
+
+    public void vincularProfessor(int turmaId, Professor professor) throws NaoEncontradoException {
+        Turma turma = buscar(turmaId);
+        turma.setProfessor(professor);
+    }
+
+    public boolean possuiTodos(int turmaId) throws NaoEncontradoException {
+        Turma turma = buscar(turmaId);
+        return turma.getCurso() != null && turma.getDisciplina() != null && turma.getProfessor() != null;
     }
 }
