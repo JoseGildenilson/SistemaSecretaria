@@ -13,6 +13,12 @@ public class Main {
     public static void main(String[] args) {
         int opcao = -1;
 
+        System.out.println("Deseja carregar dados de exemplo? (S/N)");
+        String resposta = InputHandler.lerString("Resposta: ").toUpperCase();
+        if (resposta.equals("S") || resposta.equals("SIM")) {
+            carregarDadosIniciais();
+        }
+
         // . Loop principal do programa
         while (opcao != 0) {
             System.out.println("\n=== SISTEMA DE GESTÃO ACADÊMICA ===");
@@ -53,75 +59,117 @@ public class Main {
     // ? Menus
 
     // . Menu Aluno
-    private static void menuAluno() {
-        int opcao = -1;
-        while (opcao != 0) {
-            System.out.println("\n--- GESTÃO DE ALUNOS ---");
-            System.out.println("1. Cadastrar");
-            System.out.println("2. Buscar");
-            System.out.println("3. Atualizar");
-            System.out.println("4. Remover");
-            System.out.println("5. Listar");
-            System.out.println("6. Árvore");
-            System.out.println("0. Voltar");
-            System.out.print("Opção: ");
+private static void menuAluno() {
+    int opcao = -1;
+    while (opcao != 0) {
+        System.out.println("\n--- GESTÃO DE ALUNOS ---");
+        System.out.println("1. Cadastrar");
+        System.out.println("2. Buscar");
+        System.out.println("3. Atualizar");
+        System.out.println("4. Remover");
+        System.out.println("5. Listar");
+        System.out.println("6. Árvore");
+        System.out.println("0. Voltar");
+        System.out.print("Opção: ");
 
-            opcao = InputHandler.lerInt("Opção: ");
-            try {
-                switch (opcao) {
-                    case 1:
-                        System.out.println("\n-- Novo Aluno --");
+        opcao = InputHandler.lerInt("Opção: ");
+        try {
+            switch (opcao) {
+                case 1:
+                    System.out.println("\n-- Novo Aluno --");
 
-                        int matricula = InputHandler.lerInt("Matrícula (número): ");
+                    int matricula = InputHandler.lerInt("Matrícula (número): ");
 
-                        if (serviceAluno.existe(matricula)) {
+                    if (serviceAluno.existe(matricula)) {
+                        System.out
+                                .println("ERRO: Já existe um aluno cadastrado com a matrícula " + matricula + ".");
+                    } else {
+                        // Pedir Turma - DEPENDÊNCIA OBRIGATÓRIA
+                        int idTurma = InputHandler.lerInt("ID da Turma: ");
+                        if (!serviceTurma.existe(idTurma)) {
+                            System.out.println("ERRO: Turma não encontrada.");
+                        } else if (!serviceTurma.possuiTodos(idTurma)) {
                             System.out
-                                    .println("ERRO: Já existe um aluno cadastrado com a matrícula " + matricula + ".");
+                                    .println("ERRO: A turma precisa ter Curso, Disciplina e Professor vinculados!");
                         } else {
-                            // Pedir Turma - DEPENDÊNCIA OBRIGATÓRIA
-                            int idTurma = InputHandler.lerInt("ID da Turma: ");
-                            if (!serviceTurma.existe(idTurma)) {
-                                System.out.println("ERRO: Turma não encontrada.");
-                            } else if (!serviceTurma.possuiTodos(idTurma)) {
-                                System.out
-                                        .println("ERRO: A turma precisa ter Curso, Disciplina e Professor vinculados!");
-                            } else {
-                                String nome = InputHandler.lerString("Nome: ");
-                                String cpf = InputHandler.lerString("CPF: ");
-                                String tel = InputHandler.lerString("Telefone: ");
-                                String email = InputHandler.lerString("Email: ");
-                                String curso = InputHandler.lerString("Curso: ");
+                            String nome = InputHandler.lerString("Nome: ");
+                            String cpf = InputHandler.lerString("CPF: ");
+                            String tel = InputHandler.lerString("Telefone: ");
+                            String email = InputHandler.lerString("Email: ");
+                            String curso = InputHandler.lerString("Curso: ");
 
-                                Aluno aluno = new Aluno(nome, cpf, tel, email, curso, matricula);
-                                aluno.setTurma(serviceTurma.buscar(idTurma));
-                                serviceAluno.inserir(aluno);
-                                System.out.println("Aluno cadastrado com sucesso!");
-                            }
+                            Aluno aluno = new Aluno(nome, cpf, tel, email, curso, matricula);
+                            aluno.setTurma(serviceTurma.buscar(idTurma));
+                            serviceAluno.inserir(aluno);
+                            System.out.println("Aluno cadastrado com sucesso!");
                         }
-                        break;
-                    case 2:
-                        int matBusca = InputHandler.lerInt("Digite a Matrícula: ");
-                        Aluno a = serviceAluno.buscar(matBusca);
-                        System.out.println("--------------------------------------------------");
-                        System.out.println("Matrícula: " + a.getMatricula());
-                        System.out.println("Nome:      " + a.getNome());
-                        System.out.println("Curso:     " + a.getCurso());
-                        System.out.println("Turma:     " + (a.getTurma() != null ? a.getTurma().getId() : "Sem turma"));
-                        System.out.println("CPF:       " + a.getCpf());
-                        System.out.println("Telefone:  " + a.getTelefone());
-                        System.out.println("Email:     " + a.getEmail());
-                        System.out.println("--------------------------------------------------");
-                        break;
-                    // ... rest of cases continue the same ...
-                }
-            } catch (NaoEncontradoException e) {
-                System.out.println("Erro: " + e.getMessage());
-            } catch (Exception e) {
-                System.out.println("Erro inesperado: " + e.getMessage());
+                    }
+                    break;
+                case 2:
+                    int matBusca = InputHandler.lerInt("Digite a Matrícula: ");
+                    Aluno a = serviceAluno.buscar(matBusca);
+                    System.out.println("--------------------------------------------------");
+                    System.out.println("Matrícula: " + a.getMatricula());
+                    System.out.println("Nome:      " + a.getNome());
+                    System.out.println("Curso:     " + a.getCurso());
+                    System.out.println("Turma:     " + (a.getTurma() != null ? a.getTurma().getId() : "Sem turma"));
+                    System.out.println("CPF:       " + a.getCpf());
+                    System.out.println("Telefone:  " + a.getTelefone());
+                    System.out.println("Email:     " + a.getEmail());
+                    System.out.println("--------------------------------------------------");
+                    break;
+                case 3:
+                    int matUp = InputHandler.lerInt("Digite a Matrícula para atualizar: ");
+                    Aluno alUp = serviceAluno.buscar(matUp);
+
+                    System.out.println("--- Atualizando (Pressione ENTER para manter o valor atual) ---");
+
+                    String nNome = InputHandler.lerStringOpcional("Nome (" + alUp.getNome() + "): ");
+                    if (nNome.isEmpty())
+                        nNome = alUp.getNome();
+
+                    String nTel = InputHandler.lerStringOpcional("Telefone (" + alUp.getTelefone() + "): ");
+                    if (nTel.isEmpty())
+                        nTel = alUp.getTelefone();
+
+                    String nEmail = InputHandler.lerStringOpcional("Email (" + alUp.getEmail() + "): ");
+                    if (nEmail.isEmpty())
+                        nEmail = alUp.getEmail();
+
+                    String nCurso = InputHandler.lerStringOpcional("Curso (" + alUp.getCurso() + "): ");
+                    if (nCurso.isEmpty())
+                        nCurso = alUp.getCurso();
+
+                    serviceAluno.atualizar(matUp, new Aluno(nNome, alUp.getCpf(), nTel, nEmail, nCurso, matUp));
+                    System.out.println("Dados atualizados!");
+
+                    break;
+                case 4:
+                    int matriculaRemover = InputHandler.lerInt("Digite a Matrícula para remover: ");
+                    Aluno alunoRemover = serviceAluno.buscar(matriculaRemover);
+                    serviceAluno.remover(matriculaRemover);
+                    System.out.println("Aluno(a) '" + alunoRemover.getNome() + "' removido(a) com sucesso!");
+
+                    break;
+                case 5:
+                    serviceAluno.listar();
+                    break;
+                case 6:
+                    serviceAluno.exibirArvore();
+                    break;
+                case 0:
+                    System.out.println("A voltar...");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
             }
+        } catch (NaoEncontradoException e) {
+            System.out.println("Erro: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erro inesperado: " + e.getMessage());
         }
     }
-
+}
     // . Menu Professoress
     private static void menuProfessor() {
         int opcao = -1;
@@ -375,7 +423,6 @@ public class Main {
     }
 
     // . Menu Turmas
-    // . Menu Turmas
     private static void menuTurma() {
         int opcao = -1;
         while (opcao != 0) {
@@ -471,6 +518,79 @@ public class Main {
             } catch (Exception e) {
                 System.out.println("Erro: " + e.getMessage());
             }
+        }
+    }
+
+    private static void carregarDadosIniciais() {
+        System.out.println("\n>>> Carregando dados iniciais...");
+
+        try {
+            serviceCurso.inserir(new Curso("Ciência da Computação", 1, 8));
+            serviceCurso.inserir(new Curso("Engenharia de Software", 2, 8));
+            serviceCurso.inserir(new Curso("Sistemas de Informação", 3, 8));
+
+            serviceDisciplina.inserir(new Disciplina("Estrutura de Dados", 101, 60));
+            serviceDisciplina.inserir(new Disciplina("Programação Orientada a Objetos", 102, 80));
+            serviceDisciplina.inserir(new Disciplina("Banco de Dados", 103, 60));
+            serviceDisciplina.inserir(new Disciplina("Algoritmos", 104, 80));
+
+            serviceProfessor.inserir(new Professor("João Silva", "111.111.111-11",
+                    "(84) 99999-0001", "joao.silva@email.com", "Estrutura de Dados", 8500.00, 1));
+            serviceProfessor.inserir(new Professor("Maria Santos", "222.222.222-22",
+                    "(84) 99999-0002", "maria.santos@email.com", "POO", 9000.00, 2));
+            serviceProfessor.inserir(new Professor("Pedro Costa", "333.333.333-33",
+                    "(84) 99999-0003", "pedro.costa@email.com", "Banco de Dados", 8800.00, 3));
+
+            serviceTurma.inserir(new Turma(1, "2026", 2));
+            serviceTurma.inserir(new Turma(2, "2026", 2));
+            serviceTurma.inserir(new Turma(3, "2026", 1));
+
+            serviceTurma.vincularCurso(1, serviceCurso.buscar(1));
+            serviceTurma.vincularDisciplina(1, serviceDisciplina.buscar(101));
+            serviceTurma.vincularProfessor(1, serviceProfessor.buscar(1));
+
+            serviceTurma.vincularCurso(2, serviceCurso.buscar(2));
+            serviceTurma.vincularDisciplina(2, serviceDisciplina.buscar(102));
+            serviceTurma.vincularProfessor(2, serviceProfessor.buscar(2));
+
+            serviceTurma.vincularCurso(3, serviceCurso.buscar(3));
+            serviceTurma.vincularDisciplina(3, serviceDisciplina.buscar(103));
+            serviceTurma.vincularProfessor(3, serviceProfessor.buscar(3));
+
+            Aluno a1 = new Aluno("Ana Paula", "444.444.444-44", "(84) 98888-0001",
+                    "ana.paula@email.com", "Ciência da Computação", 20231001);
+            a1.setTurma(serviceTurma.buscar(1));
+            serviceAluno.inserir(a1);
+
+            Aluno a2 = new Aluno("Carlos Eduardo", "555.555.555-55", "(84) 98888-0002",
+                    "carlos.eduardo@email.com", "Ciência da Computação", 20231002);
+            a2.setTurma(serviceTurma.buscar(1));
+            serviceAluno.inserir(a2);
+
+            Aluno a3 = new Aluno("Beatriz Lima", "666.666.666-66", "(84) 98888-0003",
+                    "beatriz.lima@email.com", "Engenharia de Software", 20231003);
+            a3.setTurma(serviceTurma.buscar(2));
+            serviceAluno.inserir(a3);
+
+            Aluno a4 = new Aluno("Daniel Souza", "777.777.777-77", "(84) 98888-0004",
+                    "daniel.souza@email.com", "Sistemas de Informação", 20231004);
+            a4.setTurma(serviceTurma.buscar(3));
+            serviceAluno.inserir(a4);
+
+            Aluno a5 = new Aluno("Fernanda Oliveira", "888.888.888-88", "(84) 98888-0005",
+                    "fernanda.oliveira@email.com", "Ciência da Computação", 20231005);
+            a5.setTurma(serviceTurma.buscar(1));
+            serviceAluno.inserir(a5);
+
+            System.out.println("✓ Dados iniciais carregados com sucesso!");
+            System.out.println("  - 3 Cursos");
+            System.out.println("  - 4 Disciplinas");
+            System.out.println("  - 3 Professores");
+            System.out.println("  - 3 Turmas (com vínculos completos)");
+            System.out.println("  - 5 Alunos");
+
+        } catch (Exception e) {
+            System.out.println("Erro ao carregar dados iniciais: " + e.getMessage());
         }
     }
 
