@@ -2,221 +2,217 @@
 
 ```mermaid
 classDiagram
-    %% ==========================================
-    %% PACOTE: VIEW (NOVO)
-    %% ==========================================
-    namespace View {
-        class MenuHandler {
-            -ServiceAluno serviceAluno$
-            -ServiceProfessor serviceProfessor$
-            -ServiceDisciplina serviceDisciplina$
-            -ServiceCurso serviceCurso$
-            -ServiceTurma serviceTurma$
-            +exibirMenuPrincipal()$
-            -menuAluno()$
-            -menuProfessor()$
-            -menuDisciplina()$
-            -menuCurso()$
-            -menuTurma()$
-            -carregarDadosIniciais()$
-        }
-    }
 
-    %% ==========================================
-    %% MAIN
-    %% ==========================================
-    class Main {
-        +main(String[] args)$
-    }
+%% ==========================================
+%% VIEW
+%% ==========================================
+class View_MenuHandler {
+    -ServiceAluno serviceAluno
+    -ServiceProfessor serviceProfessor
+    -ServiceDisciplina serviceDisciplina
+    -ServiceCurso serviceCurso
+    -ServiceTurma serviceTurma
 
-    Main --> View.MenuHandler : usa
+    +exibirMenuPrincipal()
+    -menuAluno()
+    -menuProfessor()
+    -menuDisciplina()
+    -menuCurso()
+    -menuTurma()
+    -carregarDadosIniciais()
+}
 
-    %% ==========================================
-    %% PACOTE: MODEL
-    %% ==========================================
-    namespace Model {
-        class Pessoa {
-            -String nome
-            -String cpf
-            -String telefone
-            -String email
-            +getNome() String
-            +setCpf(String cpf)
-            +setTelefone(String telefone)
-            +setEmail(String email)
-        }
+class Main {
+    +main(String[] args)
+}
 
-        class Aluno {
-            -String curso
-            -int matricula
-            -Turma turma
-            +getMatricula() int
-            +setTurma(Turma turma)
-            +compareTo(Aluno o) int
-        }
+Main --> View_MenuHandler : usa
 
-        class Professor {
-            -String disciplina
-            -double salario
-            -int id
-            -Turma turma
-            +getId() int
-            +setTurma(Turma turma)
-            +compareTo(Professor o) int
-        }
 
-        class Turma {
-            -int id
-            -String ano
-            -int semestre
-            -Disciplina disciplina
-            -Professor professor
-            -Curso curso
-            -ArvoreAVL~Aluno~ alunos
-            +adicionarAluno(Aluno aluno)
-            +removerAluno(int matricula)
-            +setProfessor(Professor professor)
-            +setCurso(Curso curso)
-            +buscarAluno(int matricula) Aluno
-            +compareTo(Turma o) int
-        }
+%% ==========================================
+%% MODEL
+%% ==========================================
+class Model_Pessoa {
+    -String nome
+    -String cpf
+    -String telefone
+    -String email
+    +getNome() String
+    +setCpf(String cpf)
+    +setTelefone(String telefone)
+    +setEmail(String email)
+}
 
-        class Curso {
-            -String nome
-            -int codigo
-            -int duracaoSemestres
-            -ArvoreAVL~Turma~ turmas
-            +adicionarTurma(Turma turma)
-            +removerTurma(int id)
-            +buscarTurma(int id) Turma
-            +compareTo(Curso o) int
-        }
+class Model_Aluno {
+    -String curso
+    -int matricula
+    -Model_Turma turma
+    +getMatricula() int
+    +setTurma(Model_Turma turma)
+    +compareTo(Aluno o) int
+}
 
-        class Disciplina {
-            -String nome
-            -int codigo
-            -int cargaHoraria
-            +compareTo(Disciplina o) int
-        }
-    }
+class Model_Professor {
+    -String disciplina
+    -double salario
+    -int id
+    -Model_Turma turma
+    +getId() int
+    +setTurma(Model_Turma turma)
+    +compareTo(Professor o) int
+}
 
-    %% Herança e Relacionamentos do Model
-    Pessoa <|-- Aluno
-    Pessoa <|-- Professor
+class Model_Turma {
+    -int id
+    -String ano
+    -int semestre
+    -Model_Disciplina disciplina
+    -Model_Professor professor
+    -Model_Curso curso
+    -ArvoreAVL_Aluno alunos
+    +adicionarAluno(Aluno aluno)
+    +removerAluno(int matricula)
+    +setProfessor(Professor professor)
+    +setCurso(Curso curso)
+    +buscarAluno(int matricula) Aluno
+    +compareTo(Turma o) int
+}
 
-    Turma "0..*" o-- "1" Curso : pertence a
-    Curso "1" *-- "0..*" Turma : contem
-    
-    Turma "0..*" --> "0..1" Disciplina : tem
-    
-    Turma "0..1" <--> "0..1" Professor : leciona
-    
-    Turma "1" <--> "0..*" Aluno : matriculado
+class Model_Curso {
+    -String nome
+    -int codigo
+    -int duracaoSemestres
+    -ArvoreAVL_Turma turmas
+    +adicionarTurma(Turma turma)
+    +removerTurma(int id)
+    +buscarTurma(int id) Turma
+    +compareTo(Curso o) int
+}
 
-    %% ==========================================
-    %% PACOTE: ARVORE AVL (ENCAPSULADO)
-    %% ==========================================
-    namespace ArvoreAVL {
-        class No~T~ {
-            -T chave
-            -No~T~ esquerda
-            -No~T~ direita
-            -int altura
-            +getChave() T
-            +setChave(T chave)
-            +getEsquerda() No~T~
-            +setEsquerda(No~T~ no)
-            +getDireita() No~T~
-            +setDireita(No~T~ no)
-            +getAltura() int
-        }
+class Model_Disciplina {
+    -String nome
+    -int codigo
+    -int cargaHoraria
+    +compareTo(Disciplina o) int
+}
 
-        class ArvoreAVL~T~ {
-            -No~T~ raiz
-            +inserir(T chave)
-            +remover(T chave)
-            +buscar(T chave) T
-            +emOrdem() List~T~
-            -rotacaoDireita(No y) No
-            -rotacaoEsquerda(No x) No
-        }
-    }
+Model_Pessoa <|-- Model_Aluno
+Model_Pessoa <|-- Model_Professor
 
-    ArvoreAVL *-- No : compoe
+Model_Turma --> Model_Curso : pertence
+Model_Curso --> Model_Turma : contém
+Model_Turma --> Model_Disciplina : tem
+Model_Turma <--> Model_Professor : leciona
+Model_Turma <--> Model_Aluno : matriculado
 
-    %% ==========================================
-    %% PACOTE: SERVICES
-    %% ==========================================
-    namespace Interface {
-        class Service~T~ {
-            <<interface>>
-            +inserir(T objeto)
-            +remover(int id)
-            +buscar(int id) T
-            +atualizar(int id, T dados)
-            +listar()
-            +existe(int id) boolean
-        }
-    }
 
-    namespace Services {
-        class ServiceAluno {
-            -ArvoreAVL~Aluno~ arvore
-        }
-        class ServiceProfessor {
-            -ArvoreAVL~Professor~ arvore
-        }
-        class ServiceCurso {
-            -ArvoreAVL~Curso~ arvore
-        }
-        class ServiceDisciplina {
-            -ArvoreAVL~Disciplina~ arvore
-        }
-        class ServiceTurma {
-            -ArvoreAVL~Turma~ arvore
-            +vincularCurso(int idTurma, Curso curso)
-            +vincularProfessor(int idTurma, Professor prof)
-            +vincularDisciplina(int idTurma, Disciplina disc)
-            +possuiTodos(int idTurma) boolean
-        }
-    }
 
-    Service <|.. ServiceAluno
-    Service <|.. ServiceProfessor
-    Service <|.. ServiceCurso
-    Service <|.. ServiceDisciplina
-    Service <|.. ServiceTurma
+%% ==========================================
+%% ARVORE AVL (SEM GENERICS)
+%% ==========================================
+class ArvoreAVL_No {
+    -Object chave
+    -ArvoreAVL_No esquerda
+    -ArvoreAVL_No direita
+    -int altura
+}
 
-    %% Dependências: View -> Services
-    View.MenuHandler --> Services.ServiceAluno
-    View.MenuHandler --> Services.ServiceProfessor
-    View.MenuHandler --> Services.ServiceCurso
-    View.MenuHandler --> Services.ServiceDisciplina
-    View.MenuHandler --> Services.ServiceTurma
+class ArvoreAVL_Aluno {
+    -ArvoreAVL_No raiz
+}
 
-    %% Dependências: Services -> Models/Arvore
-    ServiceAluno --> ArvoreAVL : usa
-    ServiceProfessor --> ArvoreAVL : usa
-    ServiceCurso --> ArvoreAVL : usa
-    ServiceDisciplina --> ArvoreAVL : usa
-    ServiceTurma --> ArvoreAVL : usa
+class ArvoreAVL_Professor {
+    -ArvoreAVL_No raiz
+}
 
-    ServiceAluno ..> Model.Aluno
-    ServiceProfessor ..> Model.Professor
-    ServiceCurso ..> Model.Curso
-    ServiceDisciplina ..> Model.Disciplina
-    ServiceTurma ..> Model.Turma
+class ArvoreAVL_Turma {
+    -ArvoreAVL_No raiz
+}
 
-    %% ==========================================
-    %% UTILS
-    %% ==========================================
-    namespace Utils {
-        class InputHandler {
-            +lerInt(String msg)$ int
-            +lerString(String msg)$ String
-            +lerDouble(String msg)$ double
-        }
-    }
+class ArvoreAVL_Curso {
+    -ArvoreAVL_No raiz
+}
 
-    View.MenuHandler ..> Utils.InputHandler : usa
+class ArvoreAVL_Disciplina {
+    -ArvoreAVL_No raiz
+}
+
+ArvoreAVL_Aluno --> ArvoreAVL_No
+ArvoreAVL_Professor --> ArvoreAVL_No
+ArvoreAVL_Turma --> ArvoreAVL_No
+ArvoreAVL_Curso --> ArvoreAVL_No
+ArvoreAVL_Disciplina --> ArvoreAVL_No
+
+
+%% ==========================================
+%% INTERFACE SERVICE
+%% ==========================================
+class Interface_Service {
+    <<interface>>
+    +inserir(objeto)
+    +remover(id)
+    +buscar(id)
+    +atualizar(id, dados)
+    +listar()
+    +existe(id) boolean
+}
+
+
+%% ==========================================
+%% SERVICES
+%% ==========================================
+class ServiceAluno {
+    -ArvoreAVL_Aluno arvore
+}
+class ServiceProfessor {
+    -ArvoreAVL_Professor arvore
+}
+class ServiceCurso {
+    -ArvoreAVL_Curso arvore
+}
+class ServiceDisciplina {
+    -ArvoreAVL_Disciplina arvore
+}
+class ServiceTurma {
+    -ArvoreAVL_Turma arvore
+    +vincularCurso(idTurma, curso)
+    +vincularProfessor(idTurma, prof)
+    +vincularDisciplina(idTurma, disc)
+    +possuiTodos(idTurma) boolean
+}
+
+Interface_Service <|.. ServiceAluno
+Interface_Service <|.. ServiceProfessor
+Interface_Service <|.. ServiceCurso
+Interface_Service <|.. ServiceDisciplina
+Interface_Service <|.. ServiceTurma
+
+
+%% Dependências View -> Services
+View_MenuHandler --> ServiceAluno
+View_MenuHandler --> ServiceProfessor
+View_MenuHandler --> ServiceCurso
+View_MenuHandler --> ServiceDisciplina
+View_MenuHandler --> ServiceTurma
+
+
+%% Dependências Services -> Model
+ServiceAluno ..> Model_Aluno
+ServiceProfessor ..> Model_Professor
+ServiceCurso ..> Model_Curso
+ServiceDisciplina ..> Model_Disciplina
+ServiceTurma ..> Model_Turma
+
+
+%% ==========================================
+%% UTILS
+%% ==========================================
+class Utils_InputHandler {
+    +lerInt(msg) int
+    +lerString(msg) String
+    +lerDouble(msg) double
+}
+
+View_MenuHandler ..> Utils_InputHandler
+
 ```
