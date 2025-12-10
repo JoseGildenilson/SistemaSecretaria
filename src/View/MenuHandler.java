@@ -157,17 +157,31 @@ public class MenuHandler {
                     case 1:
                         System.out.println("\n-- Novo Professor --");
                         int id = InputHandler.lerInt("ID: ");
+
                         if (serviceProfessor.existe(id)) {
                             System.out.println("ERRO: Já existe um professor com o ID " + id);
                         } else {
-                            String nome = InputHandler.lerString("Nome: ");
-                            String cpf = InputHandler.lerString("CPF: ");
-                            String tel = InputHandler.lerString("Tel: ");
-                            String email = InputHandler.lerString("Email: ");
-                            String disc = InputHandler.lerString("Disciplina: ");
-                            double sal = InputHandler.lerDouble("Salário: ");
-                            serviceProfessor.inserir(new Professor(nome, cpf, tel, email, disc, sal, id));
-                            System.out.println("Professor cadastrado!");
+                            System.out.println("\n--- Disciplinas Disponíveis ---");
+                            serviceDisciplina.listar(); 
+                            System.out.println("-------------------------------");
+
+                            int codDisc = InputHandler.lerInt("Digite o Código da Disciplina acima: ");
+                            
+                            if (!serviceDisciplina.existe(codDisc)) {
+                                System.out.println("ERRO: Código " + codDisc + " não encontrado. Tente novamente.");
+                            } else {
+                                String nomeDisciplina = serviceDisciplina.buscar(codDisc).getNome();
+                                System.out.println(">> Disciplina selecionada: " + nomeDisciplina);
+                                
+                                String nome = InputHandler.lerString("Nome do Professor: ");
+                                String cpf = InputHandler.lerString("CPF: ");
+                                String tel = InputHandler.lerString("Tel: ");
+                                String email = InputHandler.lerString("Email: ");
+                                double sal = InputHandler.lerDouble("Salário: ");
+
+                                serviceProfessor.inserir(new Professor(nome, cpf, tel, email, nomeDisciplina, sal, id));
+                                System.out.println("Professor cadastrado com sucesso!");
+                            }
                         }
                         break;
                     case 2:
@@ -359,6 +373,7 @@ public class MenuHandler {
             System.out.println("7. Vincular Disciplina");
             System.out.println("8. Vincular Professor");
             System.out.println("9. Árvore");
+            System.out.println("10. Vincular Aluno");
             System.out.println("0. Voltar");
             opcao = InputHandler.lerInt("Opção: ");
             try {
@@ -423,6 +438,50 @@ public class MenuHandler {
                     case 9:
                         serviceTurma.exibirArvore();
                         break;
+                    case 10:
+                        System.out.println("\n-- Vincular Aluno em Turma --");
+
+                        // --- 1. LISTAR AS TURMAS DISPONÍVEIS (NOVIDADE) ---
+                        // Supondo que você tenha um método listar() no seu serviceTurma.
+                        // Se não tiver, recomendo criar um que faça um loop e imprima os IDs e Nomes.
+                        System.out.println("Turmas disponíveis:");
+                        serviceTurma.listar(); 
+                        System.out.println("---------------------");
+
+                        // --- 2. SELEÇÃO DA TURMA ---
+                        int idTurmaAluno = InputHandler.lerInt("Digite o ID da Turma desejada: ");
+
+                        if (!serviceTurma.existe(idTurmaAluno)) {
+                            System.out.println("ERRO: Turma não encontrada.");
+                        } else if (!serviceTurma.possuiTodos(idTurmaAluno)) {
+                            System.out.println("ERRO: A turma precisa ter Curso, Disciplina e Professor vinculados antes de receber alunos!");
+                        } else {
+                            Turma turmaAlvo = serviceTurma.buscar(idTurmaAluno);
+                            System.out.println(">> Turma selecionada: " + turmaAlvo.getDisciplina().getNome() + " (ID: " + idTurmaAluno + ")");
+                            
+                            // --- 3. SELEÇÃO DO ALUNO (Aqui mudou tudo) ---
+                            int mat = InputHandler.lerInt("Digite a Matrícula do Aluno existente: ");
+
+                            // A lógica agora é: Se NÃO existe, dá erro.
+                            if (!serviceAluno.existe(mat)) {
+                                System.out.println("ERRO: Não existe aluno cadastrado com a matrícula " + mat);
+                                System.out.println("Dica: Use a opção de 'Cadastrar Aluno' primeiro.");
+                            } else {
+                                // --- 4. VINCULAÇÃO ---
+                                // Busca o objeto aluno que JÁ existe na memória/banco
+                                Aluno alunoExistente = serviceAluno.buscar(mat);
+
+                                // Adiciona a relação
+                                turmaAlvo.adicionarAluno(alunoExistente);
+                                
+                                // Opcional: Se seu sistema for bidirecional (o aluno saber em que turmas está), 
+                                // você talvez precise de algo como: alunoExistente.adicionarTurma(turmaAlvo);
+
+                                System.out.println("Sucesso! O aluno " + alunoExistente.getNome() + " foi vinculado à turma.");
+                            }
+                        }
+                        break;
+                                            
                     case 0:
                         break;
                 }
