@@ -43,10 +43,10 @@ public class ArvoreAVL<T extends Comparable<T>> {
 
     private No<T> rotacaoDireita(No<T> y) {
         No<T> x = y.getEsquerda(); 
-        No<T> T2 = x.getDireita(); 
+        No<T> z = x.getDireita(); 
 
         x.setDireita(y); 
-        y.setEsquerda(T2); 
+        y.setEsquerda(z); 
 
         y.setAltura(Math.max(altura(y.getEsquerda()), altura(y.getDireita())) + 1);
         x.setAltura(Math.max(altura(x.getEsquerda()), altura(x.getDireita())) + 1);
@@ -57,10 +57,10 @@ public class ArvoreAVL<T extends Comparable<T>> {
     private No<T> rotacaoEsquerda(No<T> x) {
 
         No<T> y = x.getDireita(); 
-        No<T> T2 = y.getEsquerda(); 
+        No<T> z = y.getEsquerda(); 
 
         y.setEsquerda(x); 
-        x.setDireita(T2); 
+        x.setDireita(z); 
 
 
         x.setAltura(Math.max(altura(x.getEsquerda()), altura(x.getDireita())) + 1);
